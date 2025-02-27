@@ -33,4 +33,8 @@ public class CustomerService {
     public void deleteCustomer(int id) {
         customerRepo.deleteById(id);
     }
+
+    public void updateCustomer(CustomerDTO customerDTO) {
+        customerRepo.save(new Customer(customerDTO.getId(), customerDTO.getName(), customerDTO.getAddress()));
+    }
 }

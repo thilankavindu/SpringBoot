@@ -27,12 +27,14 @@ public class ItemController {
 
     @DeleteMapping("delete/{id}")
     public String deleteItem(@PathVariable int id) {
+        System.out.println(id);
         itemService.deleteItem(id);
         return "Item Deleted with id " + id;
     }
 
     @PutMapping("update")
     public String updateItem(@RequestBody ItemDTO itemDTO) {
+        System.out.println(itemDTO.getDescription());
         itemService.saveItem(itemDTO);
         return itemDTO.toString();
     }
