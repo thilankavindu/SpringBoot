@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place Order</title>
+    <link rel="stylesheet" href="styles.css">
+
+
+
+</head>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+        margin: 0;
+    }
+
+    .form-container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        width: 400px;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    label {
+        margin: 8px 0 4px;
+    }
+
+    input {
+        margin-bottom: 12px;
+        padding: 8px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    button {
+        padding: 10px;
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    #addOrderDetail {
+        margin-bottom: 12px;
+        background-color: #28a745;
+    }
+
+    #addOrderDetail:hover {
+        background-color: #218838;
+    }
+
+    .order-detail {
+        margin-bottom: 16px;
+    }
+
+</style>
+
+<body>
+
+
+<div class="form-container">
+    <h2>Place Your Order</h2>
+    <form id="orderForm">
+        <!-- Customer Info -->
+        <label for="customerName">Customer Name:</label>
+        <input type="text" id="customerName" name="customerName" required>
+
+        <label for="customerEmail">Customer Email:</label>
+        <input type="email" id="customerEmail" name="customerEmail" required>
+
+        <label for="customerPhone">Customer Phone:</label>
+        <input type="tel" id="customerPhone" name="customerPhone" required>
+
+        <!-- Order Details -->
+        <h3>Order Details</h3>
+        <div id="orderDetailsContainer">
+            <div class="order-detail">
+                <label for="productName">Product Name:</label>
+                <input type="text" class="productName" required>
+
+                <label for="quantity">Quantity:</label>
+                <input type="number" class="quantity" required>
+
+                <label for="price">Price:</label>
+                <input type="number" class="price" required>
+            </div>
+        </div>
+
+        <button type="button" id="addOrderDetail">Add Another Product</button>
+        <button type="submit">Submit Order</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const orderForm = document.getElementById("orderForm");
+        const addOrderDetailButton = document.getElementById("addOrderDetail");
+        const orderDetailsContainer = document.getElementById("orderDetailsContainer");
+
+        addOrderDetailButton.addEventListener("click", function() {
+            const orderDetailDiv = document.createElement("div");
+            orderDetailDiv.classList.add("order-detail");
+
+            orderDetailDiv.innerHTML = `
+            <label for="productName">Product Name:</label>
+            <input type="text" class="productName" required>
+
+            <label for="quantity">Quantity:</label>
+            <input type="number" class="quantity" required>
+
+            <label for="price">Price:</label>
+            <input type="number" class="price" required>
+        `;
+
+            orderDetailsContainer.appendChild(orderDetailDiv);
+        });
+
+        orderForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const customerName = document.getElementById("customerName").value;
+            const customerEmail = document.getElementById("customerEmail").value;
+            const customerPhone = document.getElementById("customerPhone").value;
+
+            const orderDetails = [];
+            const orderDetailElements = document.querySelectorAll(".order-detail");
+
+            orderDetailElements.forEach(detail => {
+                const productName = detail.querySelector(".productName").value;
+                const quantity = detail.querySelector(".quantity").value;
+                const price = detail.querySelector(".price").value;
+
+                orderDetails.push({
+                    productName: productName,
+                    quantity: quantity,
+                    price: price
+                });
+            });
+
+            const orderData = {
+                customerName: customerName,
+                customerEmail: customerEmail,
+                customerPhone: customerPhone,
+                orderDetails: orderDetails
+            };
+
+            // Make an API call to submit the order (replace with your actual API endpoint)
+            fetch("http://localhost:8080/orders/place", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(orderData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert("Order placed successfully!");
+                    console.log(data);
+                })
+                .catch(error => {
+                    console.error("Error placing order:", error);
+                    alert("There was an error placing your order.");
+                });
+        });
+    });
+
+</script>
+
+</body>
+</html>
