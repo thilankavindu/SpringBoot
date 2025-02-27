@@ -32,7 +32,7 @@ public class CustomerController {
 
     @PutMapping("update")
     public String updateCustomer(@RequestBody CustomerDTO customerDTO) {
-        customerService.addCustomer(customerDTO);
+        customerService.updateCustomer(customerDTO);
         return customerDTO.toString();
     }
 

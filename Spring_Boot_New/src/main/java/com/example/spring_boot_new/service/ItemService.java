@@ -15,11 +15,12 @@ public class ItemService {
 
     public boolean saveItem(ItemDTO ItemDTO) {
         if (itemRepo.existsByCode(ItemDTO.getCode())) {
-            return false;
+            Item item = new Item(ItemDTO.getCode(), ItemDTO.getDescription(), ItemDTO.getPrice());
+            itemRepo.save(item);
+            return true;
         }
-        Item item = new Item(ItemDTO.getCode(), ItemDTO.getDescription(), ItemDTO.getPrice());
-        itemRepo.save(item);
-        return true;
+
+        return false;
     }
 
     public ArrayList<ItemDTO> getAllItems() {
